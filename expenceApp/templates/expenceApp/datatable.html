@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="w3-container">
+    {% if msg %}
+    <div class="alert alert-{{mtype}} alert-dismissible fade show" role="alert">
+      <strong>{{msg}} !</strong> {{request.user|upper}}  
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    <h2>Expense Tracker</h2>
+    <p>Tabs are perfect for single page web applications, or for web pages capable of displaying different subjects. Click on the links below.</p>
+  </div>
+  
+  <div class="w3-bar w3-white">
+    <button class="w3-bar-item w3-button" onclick="openCity('Income')">Income</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Expence')">Expence</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
+  </div>
+  
+    <div id="Income" class="w3-container city bg-light">
+      <h2>Income: {{total_income}}</h2>
+      <table id="example" class="display" style="width:100%">
+        {% comment %} <caption><a class="btn btn-primary" href="{% url 'recordExp:create_multiple' incamt.id %}">Add Income</a></caption> {% endcomment %}
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in incmoney %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>        
+            <td>{{obj.Date}}</td>
+            <td>{{obj.amount}}</td>
+            <td>{{obj.Category}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  
+  <div id="Expence" class="w3-container city" style="display:none">
+    <h2>Expense : {{money.total_expense}}</h2>
+    <table id="example" class="display" style="width:100%">
+      {% comment %} <caption><a class="btn btn-primary" href="{% url 'recordExp:create_multiple' expamt.id %}">Add Expence</a></caption> {% endcomment %}
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Date</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in expmoney %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{obj.Date}}</td>
+          <td>{{obj.amount}}</td>
+          <td>{{obj.Category}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+  
+  <div id="Tokyo" class="w3-container city" style="display:none">
+    <h2>Tokyo</h2>
+    <p>Tokyo is the capital of Japan.</p>
+  </div>
+  
+<table id="example" class="display" style="width:100%">
+
+    <tfoot>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Usage</th>
+          </tr>
+    </tfoot>
+</table>
+    {% endblock content %}
+    {% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+        function openCity(cityName) {
+            var i;
+            var x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+              x[i].style.display = "none";  
+            }
+            document.getElementById(cityName).style.display = "block";  
+          }
+    </script>
+    {% endblock scripts %}

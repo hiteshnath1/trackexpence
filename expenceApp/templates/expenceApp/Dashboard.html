@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+
+
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+                      {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags %} class = "alert alert-{{message.tags}} alert-dismissible fade-show mt-4" {% endif %} >
+                            <strong>{{message}} {{request.user.username|upper}}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                        {% endfor %}
+                      {% endif %} 
+              <!-- Page Heading -->
+                    {% if money_type %}
+                        {% for type in money_type %}
+                            <a href="/?choice={{type.id}}" class="btn btn-info mt-5">{{type.name}}</a>
+                        {% endfor %}
+                    {% endif %}
+                    {% if qs %}
+                    <div class="row">
+                      <div class="card-body col-6">
+                        <div class="chart-pie pt-4 mb-4">
+                          <canvas id="myPieChart"></canvas>
+                        </div>
+                      </div>
+                      <div class="card-body col-6">
+                        <div class="chart-pie pt-4 mb-4">
+                          <canvas id="myBarChart"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+              <!-- DataTales Example -->
+              <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <a class="btn btn-outline-primary font-weight-bold text-primary" href="/add"><i class="fa-solid fa-plus"></i>Add</a>
+                  </div>
+                  <div class="card-body">
+                      <div class="table-responsive">
+                          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Usage</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for obj in incmoney %}
+                              <tr>
+                                <th scope="row">{{forloop.counter}}</th>        
+                                <td>{{obj.Date}}</td>
+                                <td>{{obj.amount}}</td>
+                                <td>{{obj.Category}}</td>
+                              </tr>
+                              {% empty %}
+                              <tr>
+                                <th scope="row" colspan=4 class="text-center"><blink>Sorry No Data Kindly Make Entry</blink></th>        
+                                
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+          <!-- /.container-fluid -->
+
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+          <div class="container my-auto">
+              <div class="copyright text-center my-auto">
+                  <span>Copyright &copy; Your Website 2020</span>
+              </div>
+          </div>
+      </footer>
+      <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<script>
+$(document).ready(function () {
+    $('#dataTable').DataTable();
+});
+var ctx1 = document.getElementById("myPieChart");
+var myPieChart = new Chart(ctx1, {
+  type: 'doughnut',
+  data: {
+    labels: [{% for name in qs %}"{{name.Category__name|upper}}",{% endfor %}],
+    datasets: [{
+      data: [{% for data in qs %}'{{data.total_price}}',{% endfor %}],
+      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      caretPadding: 10,
+    },
+    legend: {
+      display: false
+    },
+    cutoutPercentage: 80,
+  },
+});
+{% comment %} bar chart {% endcomment %}
+var ctx = document.getElementById("myBarChart");
+var myBarChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: [{% for name in qs %}"{{name.Category__name|upper}}",{% endfor %}],
+    datasets: [{
+      label: "Rs",
+      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+      data: [{% for data in qs %}'{{data.total_price}}',{% endfor %}],
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 25,
+        top: 25,
+        bottom: 0
+      }
+    },
+    
+    
+  }
+});
+
+
+
+</script>
+
+
+{% endblock content %}

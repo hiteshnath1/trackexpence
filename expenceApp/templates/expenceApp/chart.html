@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Chart{% endblock title %}
+
+{% block content %}
+<form class="row gy-2 gx-3 align-items-center" method="POST">
+  {% csrf_token %}
+  
+  <div class="col-auto">
+    <div class="input-group">
+      <div class="input-group-text">Type</div>
+      {{form.income_type}}
+    </div>
+  </div>
+  <div class="col-auto">
+    <div class="input-group">
+      <div class="input-group-text">From</div>
+      {{form.date_from}}
+    </div>
+  </div>
+  <div class="col-auto">
+    <div class="input-group">
+      <div class="input-group-text">To</div>
+      {{form.date_to}}
+    </div>
+  </div>
+  <div class="col-auto">    
+    <div class="input-group">
+      <div class="input-group-text">Chart Type</div>
+      {{form.chart_type}}
+    </div>
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<div class="row mt-4">
+
+    <div class="col-xl-8 col-lg-7">
+
+        <!-- Area Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>
+                <hr>
+                Styling for the area chart can be found in the
+                <code>/js/demo/chart-area-demo.js</code> file.
+            </div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-bar">
+                    <canvas id="myBarChart"></canvas>
+                </div>
+                <hr>
+                Styling for the bar chart can be found in the
+                <code>/js/demo/chart-bar-demo.js</code> file.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Donut Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-pie pt-4">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+                <hr>
+                Styling for the donut chart can be found in the
+                <code>/js/demo/chart-pie-demo.js</code> file.
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+
+  
+  // Area Chart Example
+  var ctx = document.getElementById("myPieChart");
+  var myLineChart = new Chart(ctx, {
+    type: '{{chart}}',
+    data: {
+      labels: [{% for name in qs %}"{{name.Category__name}}",{% endfor %}],
+      datasets: [{
+        label: "Earnings",
+        lineTension: 0.3,
+        backgroundColor: "rgba(78, 115, 223, 0.05)",
+        borderColor: "rgba(78, 115, 223, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+        pointBorderColor: "rgba(78, 115, 223, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [{% for data in qs %}'{{data.total_price}}',{% endfor %}],
+      }],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 25,
+          top: 25,
+          bottom: 0
+        }
+      },
+      scales: {
+        xAxes: [{
+          time: {
+            unit: 'date'
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            maxTicksLimit: 7
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            // Include a dollar sign in the ticks
+            
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2]
+          }
+        }],
+      },
+      legend: {
+        display: false
+      },
+      
+    }
+  });
+  
+// Pie Chart Example
+var ctx1 = document.getElementById("myAreaChart");
+var myPieChart = new Chart(ctx1, {
+  type: '{{chart}}',
+  data: {
+    labels: [{% for name in qs %}"{{name.Category__name}}",{% endfor %}],
+    datasets: [{
+      data: [{% for data in qs %}'{{data.total_price}}',{% endfor %}],
+      backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+      hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      caretPadding: 10,
+    },
+    legend: {
+      display: false
+    },
+    cutoutPercentage: 80,
+  },
+});
+
+</script>
+{% endblock scripts %}

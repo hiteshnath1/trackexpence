@@ -1,0 +1,70 @@
+{% load static %}
+{% url 'expenceApp:home' as path_to_home %}
+{% url 'expenceApp:addExp' as path_to_add %}
+{% url 'expenceApp:charts' as path_to_chart %}
+{% url 'expenceApp:addmul' as path_to_addmul %}
+
+
+
+{% if request.user.is_authenticated %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href=""><img src="{{request.user.userprofile.image.url}}" class="logo-sm"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == path_to_home %}active{% endif %} " href="{{path_to_home}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == path_to_add %}active{% endif %} " href="{{path_to_add}}">Add Record</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == path_to_chart %}active{% endif %} " href="{{path_to_chart}}">Charts</a>
+          </li>                 
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == path_to_addmul %}active{% endif %} " href="{{path_to_addmul}}">Add Multiple</a>
+          </li>                 
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        
+          <div class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{request.user.username|upper }}</span>
+                  <img class="img-profile rounded-circle logo-sm"
+                      src="{{request.user.userprofile.image.url}}">
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu shadow animated--grow-in"
+                  aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="/profile">
+                      <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                      Profile
+                  </a>
+                  <a class="dropdown-item" href="#">
+                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                      Settings
+                  </a>
+                  <a class="dropdown-item" href="#">
+                      <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                      Activity Log
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                      Logout
+                  </a>
+              </div>
+            </div>
+
+      
+      </div>
+    </div>
+  </nav>  
+  {% endif %}

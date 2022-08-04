@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Dashboard
+{% endblock title %}
+
+{% block content %}
+    {% comment %} {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{error_message}}
+        </div>
+    {% endif %} {% endcomment %}
+
+  <div class="row">
+      <div class="col-md-11 mt-60 mx-md-auto">
+          <div class="login-box bg-white pl-lg-5 pl-0">
+              <div class="row no-gutters align-items-center">
+                  <div class="col-md-8">
+                      <div class="form-wrap bg-white">
+                          <p class="container"> 
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div {% if message.tags %} class = "alert alert-{{message.tags}} alert-dismissible fade-show" {% endif %} >
+                                    <strong>{{message}}</strong>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                          </p>
+                          <div >
+                            {% if money_type %}
+                              {% for type in money_type %}
+                                  <a href="/addmul/?choice={{type.id}}" class="btn btn-primary">{{type.name}}</a>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                          <div id="Income" class="">
+                            <table id="myTable" class="table mt-2">
+                              <thead>
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Name</th>
+                                  <th scope="col">amount</th>
+                                  <th scope="col">Date</th>
+                                  <th scope="col">Add</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for obj in incmoney %}
+                                <form method="POST" action=" {% url 'expenceApp:multiaddsave' obj.id %} ">
+                                  {% csrf_token %}
+                                <tr>
+                                  <th scope="row">{{forloop.counter}}</th>        
+                                  <td> {{obj.name|upper}} </td>
+                                  <td> <input type='number' class="form-control" name="amount" required> </td>
+                                  <td> <input type="date" class="form-control" name="date">
+                                  <td> <button type="submit" class="btn btn-outline-primary">Add</button> </td>
+
+
+                                </tr>
+                              </form>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                          
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="content text-center">
+                          <div class="border-bottom pb-5 mb-5"><div class="col">
+                            <div class="col-md">
+                              <div class="card text-center text-dark  mt-3" id="orders-pending">
+                                <div class="card-header">
+                                  <h5 class="card-title">Income</h5>
+                                </div>
+                                <div class="card-body">
+                                  <h3 class="card-title">{{total_income}}</h3>
+                                </div>
+                            </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="socials">
+                            <div class="col">
+                              <div class="col-md">
+                                <div class="card text-center text-dark  mb-3" id="orders-delivered">
+                                  <div class="card-header">
+                                    <h5 class="card-title">Expense</h5>
+                                  </div>
+                                  <div class="card-body">
+                                    <h3 class="card-title">{{total_expense}}</h3>
+                                  </div>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    {% endblock content %}
+    {% block scripts %}
+      {% endblock scripts %}
