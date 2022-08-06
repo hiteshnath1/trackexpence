@@ -38,7 +38,7 @@ def moneyView(request):
         'qs':qs,
         'lab':lab,
     }
-    return render(request,'expenceApp/dashboard.html',context)
+    return render(request,'expenceApp/Dashboard.html',context)
 @login_required
 def charts(request):
     form = ExpenceSearchForm(request.POST or None)
