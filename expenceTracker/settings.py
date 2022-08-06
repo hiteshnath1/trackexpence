@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'l0nb9%n-$yg6i#dzw46&2@^^0^rr0$i6iueipqdp^cank!-_l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1:8000','trackexpence.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','trackexpence.herokuapp.com']
 
 
 # Application definition
