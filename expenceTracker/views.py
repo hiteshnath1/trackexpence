@@ -56,14 +56,6 @@ def signup(request):
         form = signUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            if user is not None:
-                login(request,user)
-                messages.success(request,msg)
-                return redirect('/profile')
-
             msg     = 'User created - please <a href="/login">login</a>.'
             success = True
 
